@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reina-store-deploy
+  labels:
+    app: react
+    tier: frontend
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react
+  template:
+    metadata:
+      labels:
+        app: react
+        tier: frontend
+      namespace: dev
+    spec:
+      containers:
+        - name: react-app
+          image:  acrreact.azurecr.io/frontend/react-app:latest
+          ports:
+            - containerPort: 3000
