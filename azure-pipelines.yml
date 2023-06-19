@@ -1,0 +1,31 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+resources:
+- repo: self
+variables:
+  tag: '$(Build.BuildId)'
+
+stages:
+# Build Stage
+- stage: Build  
+  displayName: Build Stage
+  jobs:
+  - job: Build
+    displayName: Build Job
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+    # Task-1: Build Docker Image and push to Azure Container Registry ACR
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'azure-acr-svc'
+        repository: 'reina-store'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags:
+          $(tag)
