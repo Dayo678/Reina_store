@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: reina-deploy-svc
   labels:
-    tier: frontend
+    tier: front-end
     app: react
   namespace: dev
 spec:
