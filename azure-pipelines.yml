@@ -7,8 +7,6 @@ trigger:
 - main
 resources:
 - repo: self
-pool:
-  vmImage: ubuntu-latest
 
 
 stages:
@@ -19,7 +17,7 @@ stages:
   - job: Build
     displayName: Build Job
     pool:
-      vmImage: vmImage
+      vmImage: "ubuntu-latest"
     steps:
     # Task-1: Build Docker Image and push to Azure Container Registry ACR
     - task: Docker@2
