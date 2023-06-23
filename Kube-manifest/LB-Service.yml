@@ -5,7 +5,6 @@ metadata:
   labels:
     tier: front-end
     app: react
-  namespace: dev
 spec:
   type: LoadBalancer
   selector:
