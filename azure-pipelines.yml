@@ -1,0 +1,96 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Build
+  displayName: Build and Push stage
+  jobs:
+   - job: Build
+     displayName: Build
+     pool:
+       vmImage: "ubuntu-latest"
+     steps:
+      - task: Docker@2
+        displayName: Build and push an image to container registry
+        inputs:
+          containerRegistry: 'azure-acr-svc-con'
+          repository: 'react-app'
+          command: 'buildAndPush'
+          Dockerfile: '**/Dockerfile'
+  
+- stage: TerraformValidate
+  jobs:
+   - job: TerraformValidate
+     continueOnError: false
+     steps:
+      - task: PublishPipelineArtifact@1
+        displayName: Publish Artifact
+        inputs:
+          targetPath: '$(System.DefaultWorkingDirectory)/aks-cluster'
+          artifact: 'terraform-mainfests'
+          publishLocation: 'pipeline'
+      - task: TerraformInstaller@0
+        displayName: Terraform Install
+        inputs:
+          terraformVersion: 'latest'
+      - task: TerraformCLI@0
+        displayName: TerraformValidate
+        inputs:
+          command: 'validate'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
+          allowTelemetryCollection: false
+
+- stage: DeployToAks
+  jobs:
+    - deployment: DeployToAks
+      displayName: Deploy to AKS Cluster
+      pool:
+        vmImage: "ubuntun-latest"
+      environment: 'dev'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - task: DownloadSecureFile@1
+                displayName: Download SSH Key
+                name: sshkey
+                inputs:
+                  secureFile: 'aks-terraform-devops-ssh-key-ububtu.pub'
+              - task: TerraformCLI@0
+                displayName: Terraform Init
+                inputs:
+                  command: 'init'
+                  workingDirectory: '$(Pipeline.Workspace)/terraform-manifests'
+                  backendType: 'azurerm'
+                  backendServiceArm: 'azure-svc-con'
+                  backendAzureRmResourceGroupName: 'terraform-storage-rg'
+                  backendAzureRmStorageAccountName: 'terraformstgacct'
+                  backendAzureRmContainerName: 'tfstatefiles'
+                  backendAzureRmKey: 'aks-tfstate'
+                  allowTelemetryCollection: false
+              - task: TerraformCLI@0
+                displayName: Terraform Plan
+                inputs:
+                  command: 'plan'
+                  workingDirectory: '$(Pipeline.Workspace)/terraform-manifests'
+                  commandOptions: '-out $(Pipeline.Workspace)/terraform-manifests/$(DEV_ENVIRONMENT)-$(Build.BuildId)'
+                  allowTelemetryCollection: false
+              - task: TerraformCLI@0
+                inputs:
+                  command: 'apply'
+                  workingDirectory: '$(Pipeline.Workspace)/terraform-manifests'
+                  commandOptions: '$(Pipeline.Workspace)/terraform-manifests/$(DEV_ENVIRONMENT)-$(Build.BuildId)'
+                  allowTelemetryCollection: false
+  
+
+
+
+
