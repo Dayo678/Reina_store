@@ -1,8 +1,6 @@
 
 resource "azurerm_kubernetes_cluster" "aks-react" {
-   depends_on = [
-    azurerm_subnet.aks-vnet-subnet
-  ]
+
   name                = var.cluster_name
   location            = var.location
   resource_group_name = var.resource_group_name
