@@ -63,7 +63,7 @@ resource "azurerm_kubernetes_cluster" "aks-react" {
     node_count = 1
     min_count = 1
     max_count = 5
-    zones = [1, 2]
+    availability_zones = [1, 2, 3]
     vm_size    = "Standard_D2_v2"
     enable_auto_scaling = true
     type = var.default_node_type
