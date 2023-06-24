@@ -31,7 +31,7 @@ data "azurerm_kubernetes_service_versions" "current" {
 }
 
 resource "azurerm_virtual_network" "aks-vent" {
-  name                = "${azurerm_kubernetes_cluster.aks-react.name}-vnet"
+  name                = "cluster-vnet"
   location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = ["10.0.0.0/8"]
