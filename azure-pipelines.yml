@@ -71,9 +71,8 @@ stages:
           deploy:
             steps:
               - task: TerraformInstaller@0
-                displayName: Terraform Install
                 inputs:
-                  terraformVersion: '1.5.1'
+                  terraformVersion: 'latest'
               - task: TerraformCLI@0
                 displayName: Terraform Init
                 inputs:
