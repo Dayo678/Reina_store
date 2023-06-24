@@ -1,4 +1,5 @@
 resource "azurerm_virtual_network" "aks-vent" {
+  depends_on = [ azurerm_resource_group.ask-rcg-name ]
   name                = "${azurerm_kubernetes_cluster.aks-react.name}-vnet"
   location            = var.location
   resource_group_name = var.resource_group_name
