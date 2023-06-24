@@ -49,7 +49,7 @@ stages:
           backendServiceArm: 'azure-svc-con'
           backendAzureRmResourceGroupName: 'terraform-storage-rg'
           backendAzureRmStorageAccountName: 'terraformstgacct'
-          backendAzureRmContainerName: 'tfststatefiles'
+          backendAzureRmContainerName: 'tf-base.tfstate'
           allowTelemetryCollection: true
       - task: TerraformCLI@0
         displayName: TerraformValidate
