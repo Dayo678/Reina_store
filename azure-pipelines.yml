@@ -78,26 +78,26 @@ stages:
                 displayName: Terraform Init
                 inputs:
                   command: 'init'
-                  workingDirectory: '$(Pipeline.Workspace)/terraform-manifests'
+                  workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
                   backendType: 'azurerm'
                   backendServiceArm: 'azure-svc-con'
                   backendAzureRmResourceGroupName: 'terraform-storage-rg'
                   backendAzureRmStorageAccountName: 'terraformstgacct'
                   backendAzureRmContainerName: 'tfstatefiles'
-                  backendAzureRmKey: 'aaks-base.tfstate'
+                  backendAzureRmKey: 'aks-base.tfstate'
                   allowTelemetryCollection: false
               - task: TerraformCLI@0
                 displayName: Terraform Plan
                 inputs:
                   command: 'plan'
-                  workingDirectory: '$(Pipeline.Workspace)/terraform-manifests'
-                  commandOptions: '-out $(Pipeline.Workspace)/terraform-manifests/$(DEV_ENVIRONMENT)-$(Build.BuildId)'
+                  workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
+                  commandOptions: '-out $(System.DefaultWorkingDirectory)/aks-cluster/$(DEV_ENVIRONMENT)-$(Build.BuildId)'
                   allowTelemetryCollection: false
               - task: TerraformCLI@0
                 inputs:
                   command: 'apply'
-                  workingDirectory: '$(Pipeline.Workspace)/terraform-manifests'
-                  commandOptions: '$(Pipeline.Workspace)/terraform-manifests/$(DEV_ENVIRONMENT)-$(Build.BuildId)'
+                  workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
+                  commandOptions: '$(System.DefaultWorkingDirectory)/aks-cluster/$(DEV_ENVIRONMENT)-$(Build.BuildId)'
                   allowTelemetryCollection: false
   
 
