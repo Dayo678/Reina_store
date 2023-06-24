@@ -59,12 +59,12 @@ stages:
           workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
           allowTelemetryCollection: false
 
-- stage: DeployToAks
+- stage: DeployAks
   jobs:
-    - deployment: DeployToAks
-      displayName: Deploy to AKS Cluster
+    - deployment: DeployAks
+      displayName: Deploy AKS Cluster
       pool:
-        vmImage: "ubuntun-latest"
+        vmImage: "ubuntu-latest"
       environment: 'dev'
       strategy:
         runOnce:
@@ -85,7 +85,7 @@ stages:
                   backendAzureRmResourceGroupName: 'terraform-storage-rg'
                   backendAzureRmStorageAccountName: 'terraformstgacct'
                   backendAzureRmContainerName: 'tfstatefiles'
-                  backendAzureRmKey: 'aks-tfstate'
+                  backendAzureRmKey: 'aaks-base.tfstate'
                   allowTelemetryCollection: false
               - task: TerraformCLI@0
                 displayName: Terraform Plan
