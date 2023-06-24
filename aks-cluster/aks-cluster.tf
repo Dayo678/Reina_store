@@ -9,7 +9,7 @@ resource "azurerm_kubernetes_cluster" "aks-react" {
 
   default_node_pool {
     name       = var.default_node
-    vnet_subnet_id = azurerm_virtual_network.aks-vent-subnet.id
+    vnet_subnet_id = azurerm_subnet.aks-vnet-subnet.id
     node_count = 1
     min_count = 1
     max_count = 5
