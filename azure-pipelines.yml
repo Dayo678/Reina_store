@@ -61,6 +61,7 @@ stages:
   - deployment: AksCluster
     displayName: Aks ClusteR
     continueOnError: false
+    environment: 'dev'
     pool: 
       vmImage: $(vmImageName)
     strategy:
