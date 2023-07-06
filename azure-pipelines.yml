@@ -16,7 +16,7 @@ stages:
    - job: Build
      displayName: Build
      pool:
-       vmImage: $(vmImageName)
+       vmImage: "ubuntu-latest"
      steps:
       - task: Docker@2
         displayName: Build and push an image to container registry
@@ -63,7 +63,7 @@ stages:
     continueOnError: false
     environment: 'dev'
     pool: 
-      vmImage: $(vmImageName)
+      vmImage: 'ubuntu-latest'
     strategy:
       runOnce:
        deploy:
