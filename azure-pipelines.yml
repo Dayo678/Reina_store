@@ -23,13 +23,13 @@ stages:
           repository: 'react-app'
           command: 'buildAndPush'
           Dockerfile: '**/Dockerfile'
-      - task: TerraformInstaller@0
-        inputs:
-         terraformVersion: 'latest'
    - job: TerraformInit
      displayName: Terraform Initalize
      continueOnError: false
      steps:
+       - task: TerraformInstaller@0
+         inputs:
+           terraformVersion: 'latest'
        - task: TerraformCLI@0
          inputs:
            command: 'init'
@@ -41,12 +41,8 @@ stages:
            backendAzureRmContainerName: 'tfstatefiles'
            backendAzureRmKey: 'terraform-custom-vnet.tfstate'
            allowTelemetryCollection: false
-   - job: TerraformValidate
-     displayName: Terraform Validate
-     continueOnError: false
-     steps:
-      - task: TerraformCLI@0
-        inputs:
+       - task: TerraformCLI@0
+         inputs:
           command: 'validate'
           workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
           allowTelemetryCollection: false
