@@ -15,8 +15,6 @@ stages:
   jobs:
    - job: Build
      displayName: Build
-     pool:
-       vmImage: "ubuntu-latest"
      steps:
       - task: Docker@2
         displayName: Build and push an image to container registry
@@ -25,10 +23,11 @@ stages:
           repository: 'react-app'
           command: 'buildAndPush'
           Dockerfile: '**/Dockerfile'
+      - task: TerraformInstaller@0
+        inputs:
+         terraformVersion: 'latest'
    - job: TerraformInit
      displayName: Terraform Initalize
-     dependsOn: Build
-     condition: succeeded('Build')
      continueOnError: false
      steps:
        - task: TerraformCLI@0
@@ -44,8 +43,6 @@ stages:
            allowTelemetryCollection: false
    - job: TerraformValidate
      displayName: Terraform Validate
-     dependsOn: TerraformInit
-     condition: succeeded('TerraformInit')
      continueOnError: false
      steps:
       - task: TerraformCLI@0
@@ -55,7 +52,6 @@ stages:
           allowTelemetryCollection: false
 
 - stage: Deployment
-  condition: succeeded('TerrafromValidate')
   displayName: Deploy
   jobs:
   - deployment: AksCluster
@@ -68,6 +64,9 @@ stages:
       runOnce:
        deploy:
          steps:
+           - task: TerraformInstaller@0
+             inputs:
+               terraformVersion: 'latest'
            - task: TerraformCLI@0
              inputs:
                command: 'plan'
