@@ -46,32 +46,15 @@ stages:
           command: 'validate'
           workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
           allowTelemetryCollection: false
-
-- stage: Deployment
-  displayName: Deploy
-  jobs:
-  - deployment: AksCluster
-    displayName: Aks ClusteR
-    continueOnError: false
-    environment: 'dev'
-    pool: 
-      vmImage: 'ubuntu-latest'
-    strategy:
-      runOnce:
-       deploy:
-         steps:
-           - task: TerraformInstaller@0
-             inputs:
-               terraformVersion: 'latest'
-           - task: TerraformCLI@0
-             inputs:
-               command: 'plan'
-               workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
-               commandOptions: '-out $(System.DefaultWorkingDirectory)/aks-cluster/$(DEV_ENVIRONMENT)-$(Build.BuildId)'''
-               allowTelemetryCollection: false
-           - task: TerraformCLI@0
-             inputs:
-               command: 'apply'
-               workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
-               commandOptions: '$(System.DefaultWorkingDirectory)/aks-cluster/$(DEV_ENVIRONMENT)-$(Build.BuildId)'
-               allowTelemetryCollection: false
+       - task: TerraformCLI@0
+         inputs:
+          command: 'plan'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
+          commandOptions: '-out $(System.DefaultWorkingDirectory)/aks-cluster/$(DEV_ENVIRONMENT)-$(Build.BuildId)'''
+          allowTelemetryCollection: false
+       - task: TerraformCLI@0
+         inputs:
+           command: 'apply'
+           workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
+           commandOptions: '$(System.DefaultWorkingDirectory)/aks-cluster/$(DEV_ENVIRONMENT)-$(Build.BuildId)'
+           allowTelemetryCollection: false
