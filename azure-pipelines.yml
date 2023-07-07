@@ -27,6 +27,7 @@ stages:
      displayName: Terraform Initalize
      continueOnError: false
      steps:
+       
        - task: TerraformInstaller@0
          inputs:
            terraformVersion: 'latest'
@@ -48,10 +49,12 @@ stages:
           allowTelemetryCollection: false
        - task: TerraformCLI@0
          inputs:
+          providerAzureRmSubscriptionId: '202659f7-d233-4bd2-86b0-965d5a0f0d26'
           command: 'plan'
           workingDirectory: '$(System.DefaultWorkingDirectory)/aks-cluster'
           commandOptions: '-out $(System.DefaultWorkingDirectory)/aks-cluster/$(DEV_ENVIRONMENT)-$(Build.BuildId)'''
           allowTelemetryCollection: false
+          
        - task: TerraformCLI@0
          inputs:
            command: 'apply'
